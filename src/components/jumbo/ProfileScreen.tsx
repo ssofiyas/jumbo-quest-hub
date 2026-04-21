@@ -21,7 +21,7 @@ export const ProfileScreen = ({ name }: { name: string }) => {
   return (
     <div className="h-full overflow-y-auto pb-24 scrollbar-hide animate-slide-up">
       {/* Hero header */}
-      <div className="relative gradient-hero pt-2 pb-20 px-5">
+      <div className="relative gradient-hero pt-2 pb-10 px-5">
         <div className="flex items-center justify-between">
           <p className="text-xs font-semibold uppercase tracking-wider text-primary-foreground/90">My Profile</p>
           <button className="h-10 w-10 rounded-full bg-primary-foreground/15 backdrop-blur flex items-center justify-center text-primary-foreground">
@@ -43,7 +43,7 @@ export const ProfileScreen = ({ name }: { name: string }) => {
       </div>
 
       {/* Score card */}
-      <section className="px-5 -mt-14 mb-5">
+      <section className="px-5 mt-4 mb-5">
         <div className="bg-card rounded-3xl p-5 shadow-card">
           <div className="flex items-baseline justify-between mb-1">
             <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Jumbo Score</p>
