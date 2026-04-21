@@ -1,16 +1,32 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { PhoneFrame } from "@/components/jumbo/PhoneFrame";
+import { StatusBar } from "@/components/jumbo/StatusBar";
+import { BottomNav, type TabId } from "@/components/jumbo/BottomNav";
+import { HomeScreen } from "@/components/jumbo/HomeScreen";
+import { NewsScreen } from "@/components/jumbo/NewsScreen";
+import { WalletScreen } from "@/components/jumbo/WalletScreen";
+import { GameScreen } from "@/components/jumbo/GameScreen";
+import { ProfileScreen } from "@/components/jumbo/ProfileScreen";
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
+const Index = () => {
+  const [tab, setTab] = useState<TabId>("home");
+  const name = "Anna";
+
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
-    </div>
+    <PhoneFrame>
+      <div className="flex flex-col h-full bg-background">
+        <StatusBar dark={tab === "profile"} />
+        <div className="flex-1 min-h-0">
+          {tab === "home" && <HomeScreen name={name} />}
+          {tab === "news" && <NewsScreen />}
+          {tab === "wallet" && <WalletScreen name={name} />}
+          {tab === "game" && <GameScreen />}
+          {tab === "profile" && <ProfileScreen name={name} />}
+        </div>
+        <BottomNav active={tab} onChange={setTab} />
+      </div>
+    </PhoneFrame>
   );
 };
-
-const Index = PlaceholderIndex;
 
 export default Index;
