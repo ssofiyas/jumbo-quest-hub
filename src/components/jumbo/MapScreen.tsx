@@ -1,24 +1,23 @@
 import { useRef, useState } from "react";
 import {
-  ArrowLeft, Search, Navigation, Store, Coffee, Shirt, ShoppingBag, Sparkles,
-  MapPin, Plus, Minus, Locate, X, Footprints, ChevronUp, Car, Utensils, Film,
-  Gem, Smartphone, Heart, BookOpen,
+  ArrowLeft, Search, Navigation, Coffee, Shirt, ShoppingBag, Sparkles,
+  MapPin, Plus, Minus, Locate, X, Footprints, ChevronUp, Car, Film,
+  Smartphone, Heart, Gem, Store,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import jumboMap from "@/assets/jumbo-map.jpg";
 
 interface MapScreenProps {
   onClose: () => void;
 }
 
-// Real Jumbo floors
-type FloorId = "B1" | "G" | "1" | "2";
+// Real Jumbo Vantaa floors (Krs)
+type FloorId = "P" | "1" | "2" | "3";
 
 const floors: { id: FloorId; label: string; sub: string }[] = [
-  { id: "B1", label: "B1", sub: "Car Park" },
-  { id: "G", label: "G", sub: "Ground" },
-  { id: "1", label: "1", sub: "1st Floor" },
-  { id: "2", label: "2", sub: "2nd Floor" },
+  { id: "P", label: "P", sub: "Parking" },
+  { id: "1", label: "1", sub: "1st floor" },
+  { id: "2", label: "2", sub: "2nd floor" },
+  { id: "3", label: "3", sub: "3rd floor" },
 ];
 
 type Category = "fashion" | "food" | "grocery" | "service" | "entertainment" | "beauty" | "electronics" | "jewelry";
@@ -28,50 +27,45 @@ type Pin = {
   name: string;
   category: Category;
   floor: FloorId;
-  x: number; // percent within floor canvas
+  x: number;
   y: number;
   hours?: string;
 };
 
-// Real stores from the Jumbo directory
+// Real Jumbo Vantaa stores
 const pins: Pin[] = [
-  // B1 — Car Park
-  { id: "park-a", name: "Parking Zone A", category: "service", floor: "B1", x: 30, y: 35 },
-  { id: "park-b", name: "Parking Zone B", category: "service", floor: "B1", x: 65, y: 50 },
-  { id: "atm-akbank", name: "Akbank ATM", category: "service", floor: "B1", x: 50, y: 70 },
+  // Parking
+  { id: "park-p1", name: "P1 Parking Hall", category: "service", floor: "P", x: 28, y: 45, hours: "24h · Free 5h" },
+  { id: "park-p2", name: "P2 Parking Hall", category: "service", floor: "P", x: 70, y: 55, hours: "24h" },
 
-  // Ground Floor
-  { id: "carrefour", name: "CarrefourSA", category: "grocery", floor: "G", x: 70, y: 55, hours: "09:00 – 22:00" },
-  { id: "ikea", name: "IKEA", category: "service", floor: "G", x: 75, y: 75, hours: "10:00 – 22:00" },
-  { id: "boyner", name: "Boyner", category: "fashion", floor: "G", x: 35, y: 30 },
-  { id: "lcw-g", name: "LC Waikiki", category: "fashion", floor: "G", x: 25, y: 50 },
-  { id: "mango-g", name: "Mango", category: "fashion", floor: "G", x: 50, y: 25 },
-  { id: "starbucks", name: "Starbucks", category: "food", floor: "G", x: 55, y: 45, hours: "08:00 – 23:00" },
-  { id: "mcd", name: "McDonald's", category: "food", floor: "G", x: 60, y: 70 },
-  { id: "watsons", name: "Watsons", category: "beauty", floor: "G", x: 40, y: 65 },
-  { id: "swarovski", name: "Swarovski", category: "jewelry", floor: "G", x: 45, y: 38 },
+  // 1st floor
+  { id: "stockmann", name: "Stockmann", category: "fashion", floor: "1", x: 35, y: 30, hours: "10:00 – 21:00" },
+  { id: "halonen", name: "Halonen", category: "fashion", floor: "1", x: 50, y: 60 },
+  { id: "k-citymarket", name: "K-Citymarket", category: "grocery", floor: "1", x: 70, y: 45, hours: "07:00 – 23:00" },
+  { id: "lindex", name: "Lindex", category: "fashion", floor: "1", x: 42, y: 42 },
+  { id: "hm-1", name: "H&M", category: "fashion", floor: "1", x: 58, y: 35 },
+  { id: "kicks", name: "Kicks", category: "beauty", floor: "1", x: 48, y: 50 },
+  { id: "alko", name: "Alko", category: "grocery", floor: "1", x: 62, y: 58 },
+  { id: "info-1", name: "Info Desk", category: "service", floor: "1", x: 50, y: 70 },
 
-  // 1st Floor
-  { id: "zara", name: "Zara", category: "fashion", floor: "1", x: 32, y: 30, hours: "10:00 – 22:00" },
-  { id: "hm", name: "H&M", category: "fashion", floor: "1", x: 50, y: 28 },
-  { id: "stradivarius", name: "Stradivarius", category: "fashion", floor: "1", x: 65, y: 35 },
-  { id: "bershka", name: "Bershka", category: "fashion", floor: "1", x: 70, y: 50 },
-  { id: "mavi", name: "Mavi", category: "fashion", floor: "1", x: 28, y: 55 },
-  { id: "us-polo", name: "US Polo", category: "fashion", floor: "1", x: 40, y: 50 },
-  { id: "kahve", name: "Kahve Dünyası", category: "food", floor: "1", x: 55, y: 60 },
-  { id: "krispy", name: "Krispy Kreme", category: "food", floor: "1", x: 45, y: 70 },
-  { id: "vakko", name: "Vakko Boutique", category: "fashion", floor: "1", x: 22, y: 38 },
-  { id: "info", name: "Info Desk", category: "service", floor: "1", x: 50, y: 50 },
+  // 2nd floor
+  { id: "zara", name: "Zara", category: "fashion", floor: "2", x: 30, y: 32, hours: "10:00 – 21:00" },
+  { id: "kappahl", name: "KappAhl", category: "fashion", floor: "2", x: 45, y: 28 },
+  { id: "intersport", name: "Intersport", category: "fashion", floor: "2", x: 60, y: 35 },
+  { id: "clas-ohlson", name: "Clas Ohlson", category: "service", floor: "2", x: 70, y: 50 },
+  { id: "gigantti", name: "Gigantti", category: "electronics", floor: "2", x: 38, y: 55 },
+  { id: "starbucks", name: "Starbucks", category: "food", floor: "2", x: 52, y: 50, hours: "08:00 – 21:00" },
+  { id: "shasha", name: "Shasha Beauty", category: "beauty", floor: "2", x: 25, y: 60 },
+  { id: "fazer", name: "Fazer Cafe", category: "food", floor: "2", x: 55, y: 65, hours: "08:30 – 21:00" },
+  { id: "pandora", name: "Pandora", category: "jewelry", floor: "2", x: 48, y: 40 },
 
-  // 2nd Floor
-  { id: "cinemaxx", name: "Cinemaximum", category: "entertainment", floor: "2", x: 30, y: 30, hours: "10:00 – 00:00" },
-  { id: "legoland", name: "Legoland Discovery", category: "entertainment", floor: "2", x: 70, y: 30 },
-  { id: "sealife", name: "Sea Life Istanbul", category: "entertainment", floor: "2", x: 75, y: 55 },
-  { id: "joypark", name: "Joy Park Bowling", category: "entertainment", floor: "2", x: 25, y: 55 },
-  { id: "burger-king", name: "Burger King", category: "food", floor: "2", x: 50, y: 70 },
-  { id: "popeyes", name: "Popeyes", category: "food", floor: "2", x: 60, y: 75 },
-  { id: "dominos", name: "Domino's Pizza", category: "food", floor: "2", x: 40, y: 75 },
-  { id: "tekno", name: "Teknosa", category: "electronics", floor: "2", x: 55, y: 40 },
+  // 3rd floor
+  { id: "finnkino", name: "Finnkino Cinema", category: "entertainment", floor: "3", x: 35, y: 35, hours: "10:00 – 00:00" },
+  { id: "superpark", name: "SuperPark", category: "entertainment", floor: "3", x: 65, y: 40 },
+  { id: "hesburger", name: "Hesburger", category: "food", floor: "3", x: 50, y: 55 },
+  { id: "rax", name: "Rax Buffet", category: "food", floor: "3", x: 38, y: 60 },
+  { id: "subway", name: "Subway", category: "food", floor: "3", x: 60, y: 65 },
+  { id: "zhao-tea", name: "Zhao Tea", category: "food", floor: "3", x: 48, y: 70 },
 ];
 
 const categoryStyle: Record<Category, { bg: string; icon: typeof Store; label: string }> = {
@@ -86,7 +80,7 @@ const categoryStyle: Record<Category, { bg: string; icon: typeof Store; label: s
 };
 
 const userLoc = { x: 50, y: 50 };
-const userFloor: FloorId = "G";
+const userFloor: FloorId = "1";
 
 const buildRoute = (target: Pin) => {
   const points = [
@@ -101,16 +95,118 @@ const buildRoute = (target: Pin) => {
   return { points, meters, minutes };
 };
 
-// Map crops for the real Jumbo plan image (4 floors, side-by-side)
-const floorCrops: Record<FloorId, { x: string; w: string }> = {
-  B1: { x: "0%", w: "25%" },
-  G:  { x: "25%", w: "25%" },
-  "1": { x: "50%", w: "25%" },
-  "2": { x: "75%", w: "25%" },
+// Authentic Jumbo Vantaa floorplan (stylized, brand colors)
+const Floorplan = ({ floor }: { floor: FloorId }) => {
+  // Brand: dark green building, light green corridors, yellow accents
+  const building = "hsl(var(--brand-green))";
+  const corridor = "hsl(var(--brand-green-soft))";
+  const street = "hsl(var(--muted))";
+  const streetLabel = "hsl(var(--muted-foreground))";
+
+  if (floor === "P") {
+    return (
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
+        <rect width="100" height="100" fill="hsl(var(--background))" />
+        {/* Streets */}
+        <rect x="0" y="0" width="100" height="8" fill={street} />
+        <rect x="0" y="92" width="100" height="8" fill={street} />
+        {/* Parking blocks */}
+        <rect x="10" y="15" width="35" height="70" rx="2" fill={building} opacity="0.85" />
+        <rect x="55" y="15" width="35" height="70" rx="2" fill={building} opacity="0.85" />
+        {/* Parking lines */}
+        {[...Array(6)].map((_, i) => (
+          <line key={`l-${i}`} x1="12" y1={20 + i * 11} x2="43" y2={20 + i * 11} stroke="white" strokeWidth="0.3" opacity="0.5" />
+        ))}
+        {[...Array(6)].map((_, i) => (
+          <line key={`r-${i}`} x1="57" y1={20 + i * 11} x2="88" y2={20 + i * 11} stroke="white" strokeWidth="0.3" opacity="0.5" />
+        ))}
+        {/* Drive lane */}
+        <rect x="45" y="15" width="10" height="70" fill={corridor} />
+        <text x="27" y="51" textAnchor="middle" fontSize="6" fontWeight="900" fill="white" opacity="0.9">P1</text>
+        <text x="72" y="51" textAnchor="middle" fontSize="6" fontWeight="900" fill="white" opacity="0.9">P2</text>
+        <text x="50" y="4" textAnchor="middle" fontSize="2.4" fontWeight="700" fill={streetLabel}>VANTAANPORTINKATU</text>
+        <text x="50" y="98" textAnchor="middle" fontSize="2.4" fontWeight="700" fill={streetLabel}>KEHÄ III</text>
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
+      <rect width="100" height="100" fill="hsl(var(--background))" />
+      {/* Streets surrounding the mall */}
+      <rect x="0" y="0" width="100" height="6" fill={street} />
+      <rect x="0" y="94" width="100" height="6" fill={street} />
+      <rect x="0" y="0" width="6" height="100" fill={street} />
+      <rect x="94" y="0" width="6" height="100" fill={street} />
+
+      {/* Main mall outline (organic Jumbo shape) */}
+      <path
+        d="M 12 18
+           L 38 12
+           L 62 14
+           L 86 20
+           L 88 40
+           L 84 58
+           L 86 78
+           L 70 86
+           L 50 84
+           L 30 86
+           L 14 80
+           L 10 60
+           L 12 40 Z"
+        fill={building}
+        stroke="hsl(var(--brand-green-dark, var(--brand-green)))"
+        strokeWidth="0.4"
+      />
+
+      {/* Main corridor (light green walking paths) */}
+      <path
+        d="M 20 50 L 80 50"
+        stroke={corridor}
+        strokeWidth="6"
+        strokeLinecap="round"
+        fill="none"
+      />
+      <path
+        d="M 50 22 L 50 78"
+        stroke={corridor}
+        strokeWidth="6"
+        strokeLinecap="round"
+        fill="none"
+      />
+      <path
+        d="M 30 30 L 70 30 M 30 70 L 70 70"
+        stroke={corridor}
+        strokeWidth="3"
+        strokeLinecap="round"
+        fill="none"
+      />
+
+      {/* Central plaza */}
+      <circle cx="50" cy="50" r="5" fill="hsl(var(--brand-yellow))" opacity="0.9" />
+      <circle cx="50" cy="50" r="5" fill="none" stroke="white" strokeWidth="0.4" />
+      <text x="50" y="51.2" textAnchor="middle" fontSize="2" fontWeight="900" fill="hsl(var(--brand-green))">PLAZA</text>
+
+      {/* Escalators (yellow circles at corridor ends) */}
+      <circle cx="22" cy="50" r="2" fill="hsl(var(--brand-yellow))" />
+      <circle cx="78" cy="50" r="2" fill="hsl(var(--brand-yellow))" />
+      <circle cx="50" cy="24" r="2" fill="hsl(var(--brand-yellow))" />
+      <circle cx="50" cy="76" r="2" fill="hsl(var(--brand-yellow))" />
+
+      {/* Floor label inside building */}
+      <text x="50" y="18" textAnchor="middle" fontSize="3" fontWeight="900" fill="white" opacity="0.4">JUMBO · KRS {floor}</text>
+
+      {/* Street names */}
+      <text x="50" y="3.5" textAnchor="middle" fontSize="2.2" fontWeight="700" fill={streetLabel}>VANTAANPORTINKATU</text>
+      <text x="50" y="98" textAnchor="middle" fontSize="2.2" fontWeight="700" fill={streetLabel}>KEHÄ III</text>
+      <text x="3" y="50" textAnchor="middle" fontSize="2.2" fontWeight="700" fill={streetLabel} transform="rotate(-90 3 50)">VALUUTTAKATU</text>
+      <text x="97" y="50" textAnchor="middle" fontSize="2.2" fontWeight="700" fill={streetLabel} transform="rotate(90 97 50)">RATASTIE</text>
+    </svg>
+  );
 };
 
 export const MapScreen = ({ onClose }: MapScreenProps) => {
-  const [floor, setFloor] = useState<FloorId>("G");
+  const [floor, setFloor] = useState<FloorId>("1");
   const [selected, setSelected] = useState<Pin | null>(null);
   const [routeOn, setRouteOn] = useState(false);
   const [query, setQuery] = useState("");
@@ -159,8 +255,6 @@ export const MapScreen = ({ onClose }: MapScreenProps) => {
     setFloor(userFloor);
   };
 
-  const crop = floorCrops[floor];
-
   return (
     <div className="absolute inset-0 z-50 bg-background flex flex-col animate-slide-up">
       {/* Header */}
@@ -174,8 +268,8 @@ export const MapScreen = ({ onClose }: MapScreenProps) => {
             <ArrowLeft className="h-5 w-5" />
           </button>
           <div className="flex-1">
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Jumbo Mall map</p>
-            <h1 className="text-lg font-bold leading-tight">Find a Store</h1>
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Jumbo · Vantaa</p>
+            <h1 className="text-lg font-bold leading-tight">Floormap</h1>
           </div>
           <span className="text-[11px] font-bold bg-brand-green-soft text-brand-green px-2.5 py-1 rounded-full">
             170+ stores
@@ -186,7 +280,7 @@ export const MapScreen = ({ onClose }: MapScreenProps) => {
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search stores, cafés, services…"
+            placeholder="Hae liikettä · Search stores…"
             className="w-full bg-secondary/70 rounded-2xl pl-11 pr-4 py-3 text-sm font-medium placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
@@ -214,7 +308,7 @@ export const MapScreen = ({ onClose }: MapScreenProps) => {
                     </span>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-bold truncate">{p.name}</p>
-                      <p className="text-[10px] text-muted-foreground">Floor {p.floor} · {categoryStyle[p.category].label}</p>
+                      <p className="text-[10px] text-muted-foreground">Krs {p.floor} · {categoryStyle[p.category].label}</p>
                     </div>
                     <Navigation className="h-3.5 w-3.5 text-primary" />
                   </button>
@@ -227,21 +321,23 @@ export const MapScreen = ({ onClose }: MapScreenProps) => {
         )}
       </header>
 
-      {/* Floor switcher */}
+      {/* Floor switcher (Jumbo style: yellow circle buttons "Krs") */}
       <div className="px-5 pt-3 pb-2 flex items-center justify-between gap-2">
-        <div className="flex bg-secondary rounded-full p-1">
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Krs</span>
           {floors.map((f) => (
             <button
               key={f.id}
               onClick={() => setFloor(f.id)}
               className={cn(
-                "text-xs font-bold px-3 py-1.5 rounded-full transition-smooth flex items-center gap-1",
-                floor === f.id ? "bg-primary text-primary-foreground shadow-soft" : "text-muted-foreground",
+                "h-9 w-9 rounded-full text-xs font-black transition-smooth flex items-center justify-center border-2",
+                floor === f.id
+                  ? "bg-brand-yellow text-brand-green border-brand-yellow shadow-soft"
+                  : "bg-card text-muted-foreground border-border",
               )}
               title={f.sub}
             >
-              {f.id === "B1" && <Car className="h-3 w-3" />}
-              {f.label}
+              {f.id === "P" ? <Car className="h-4 w-4" /> : f.label}
             </button>
           ))}
         </div>
@@ -249,7 +345,7 @@ export const MapScreen = ({ onClose }: MapScreenProps) => {
           onClick={recenter}
           className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-blue shrink-0"
         >
-          <Locate className="h-3.5 w-3.5" /> My location
+          <Locate className="h-3.5 w-3.5" /> Locate
         </button>
       </div>
 
@@ -282,16 +378,16 @@ export const MapScreen = ({ onClose }: MapScreenProps) => {
       {/* Map canvas */}
       <div className="flex-1 px-5 pt-1 pb-3 min-h-0">
         <div
-          className="relative h-full w-full rounded-3xl overflow-hidden bg-muted shadow-card touch-none select-none"
+          className="relative h-full w-full rounded-3xl overflow-hidden bg-background shadow-card touch-none select-none border border-border"
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
         >
-          {/* Floor label */}
-          <div className="absolute top-3 left-3 z-20 bg-card/95 backdrop-blur rounded-full px-3 py-1.5 shadow-soft">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground leading-none">Floor</p>
-            <p className="text-sm font-bold leading-tight">{floors.find((f) => f.id === floor)?.sub}</p>
+          {/* Floor label badge */}
+          <div className="absolute top-3 left-3 z-20 bg-brand-yellow rounded-full px-3 py-1.5 shadow-soft">
+            <p className="text-[10px] font-black uppercase tracking-wider text-brand-green leading-none">Floor</p>
+            <p className="text-sm font-black text-brand-green leading-tight">{floors.find((f) => f.id === floor)?.sub}</p>
           </div>
 
           {/* Pan/zoom wrapper */}
@@ -299,21 +395,7 @@ export const MapScreen = ({ onClose }: MapScreenProps) => {
             className="absolute inset-0 origin-center transition-transform duration-200 ease-out"
             style={{ transform: `translate(${pan.x}%, ${pan.y}%) scale(${zoom})` }}
           >
-            {/* Real Jumbo floorplan crop */}
-            <div className="absolute inset-0 overflow-hidden">
-              <img
-                src={jumboMap}
-                alt={`Jumbo Mall floor ${floor}`}
-                draggable={false}
-                className="absolute h-[55%] top-[5%] max-w-none pointer-events-none"
-                style={{
-                  width: "400%",
-                  left: `-${parseFloat(crop.x) * 4}%`,
-                }}
-              />
-              {/* subtle overlay for readability */}
-              <div className="absolute inset-0 bg-card/20" />
-            </div>
+            <Floorplan floor={floor} />
 
             {/* Route overlay */}
             {route && (
@@ -321,15 +403,14 @@ export const MapScreen = ({ onClose }: MapScreenProps) => {
                 <polyline
                   points={routePath}
                   fill="none"
-                  stroke="hsl(var(--brand-blue))"
-                  strokeWidth="1.6"
+                  stroke="hsl(var(--brand-yellow))"
+                  strokeWidth="1.4"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeDasharray="2.5 1.5"
                   className="animate-pulse"
                 />
-                {/* destination dot */}
-                <circle cx={selected!.x} cy={selected!.y} r="2" fill="hsl(var(--brand-blue))" />
+                <circle cx={selected!.x} cy={selected!.y} r="2" fill="hsl(var(--brand-yellow))" />
               </svg>
             )}
 
@@ -404,7 +485,7 @@ export const MapScreen = ({ onClose }: MapScreenProps) => {
 
           {visible.length === 0 && (
             <div className="absolute inset-x-0 bottom-20 text-center text-xs font-semibold text-muted-foreground z-10">
-              No stores match your filter on this floor
+              No stores match your filter on Krs {floor}
             </div>
           )}
         </div>
@@ -428,11 +509,11 @@ export const MapScreen = ({ onClose }: MapScreenProps) => {
               </span>
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                  {categoryStyle[selected.category].label} · Floor {selected.floor}
+                  {categoryStyle[selected.category].label} · Krs {selected.floor}
                 </p>
                 <p className="text-sm font-bold truncate">{selected.name}</p>
                 <p className="text-[11px] text-muted-foreground inline-flex items-center gap-1">
-                  <MapPin className="h-3 w-3" /> Open · {selected.hours ?? "10:00 – 22:00"}
+                  <MapPin className="h-3 w-3" /> Open · {selected.hours ?? "10:00 – 21:00"}
                 </p>
               </div>
               <button
@@ -456,7 +537,7 @@ export const MapScreen = ({ onClose }: MapScreenProps) => {
                 {selected.floor !== userFloor ? (
                   <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
                     <ChevronUp className="h-4 w-4 text-brand-blue" />
-                    Take escalator from <b>Ground</b> to <b>Floor {selected.floor}</b>
+                    Take escalator from <b>Krs {userFloor}</b> to <b>Krs {selected.floor}</b>
                     <button
                       onClick={() => setFloor(selected.floor)}
                       className="ml-auto text-[11px] font-bold text-brand-blue underline"
