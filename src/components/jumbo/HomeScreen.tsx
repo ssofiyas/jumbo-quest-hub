@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Search, Bell, MapPin, ChevronRight, Tag, Sparkles, Coffee, ShoppingBag, Shirt, Gift } from "lucide-react";
 import bannerMall from "@/assets/banner-mall.jpg";
 import bannerDeal from "@/assets/banner-deal.jpg";
+import { JumboLogo } from "./JumboLogo";
+import { MapScreen } from "./MapScreen";
 import { cn } from "@/lib/utils";
 
 const banners = [
@@ -10,33 +12,39 @@ const banners = [
 ];
 
 const categories = [
-  { icon: Shirt, label: "Fashion", color: "bg-accent-soft text-accent" },
-  { icon: Coffee, label: "Café", color: "bg-secondary text-primary" },
-  { icon: ShoppingBag, label: "Grocery", color: "bg-accent-soft text-accent" },
-  { icon: Gift, label: "Gifts", color: "bg-secondary text-primary" },
+  { icon: Shirt, label: "Fashion", color: "bg-brand-red-soft text-primary" },
+  { icon: Coffee, label: "Café", color: "bg-brand-yellow-soft text-brand-yellow" },
+  { icon: ShoppingBag, label: "Grocery", color: "bg-brand-green-soft text-brand-green" },
+  { icon: Gift, label: "Gifts", color: "bg-brand-blue-soft text-brand-blue" },
 ];
 
 const deals = [
-  { brand: "Marimekko", title: "−20% on spring collection", expires: "3 days left", color: "from-accent/90 to-accent" },
-  { brand: "Prisma", title: "Buy 2 Get 1 Free coffee", expires: "Today only", color: "from-primary to-primary-glow" },
-  { brand: "Stadium", title: "Free Jumbo tote with €40+", expires: "1 week left", color: "from-gold to-accent" },
+  { brand: "Marimekko", title: "−20% on spring collection", expires: "3 days left", color: "from-primary to-primary-glow" },
+  { brand: "Prisma", title: "Buy 2 Get 1 Free coffee", expires: "Today only", color: "from-brand-green to-brand-green/70" },
+  { brand: "Stadium", title: "Free Jumbo tote with €40+", expires: "1 week left", color: "from-brand-blue to-brand-blue/70" },
 ];
 
 export const HomeScreen = ({ name }: { name: string }) => {
   const [bannerIdx, setBannerIdx] = useState(0);
+  const [mapOpen, setMapOpen] = useState(false);
 
   return (
     <div className="h-full overflow-y-auto pb-24 scrollbar-hide animate-slide-up">
+      {mapOpen && <MapScreen onClose={() => setMapOpen(false)} />}
+
       {/* Header */}
       <header className="px-5 pt-2 pb-4">
         <div className="flex items-center justify-between mb-4">
-          <div>
-            <p className="text-xs text-muted-foreground font-medium">Welcome back</p>
-            <h1 className="text-2xl font-bold text-foreground">Hello, {name} 👋</h1>
+          <div className="flex items-center gap-3">
+            <JumboLogo className="h-8" />
+            <div>
+              <p className="text-[11px] text-muted-foreground font-medium leading-tight">Welcome back</p>
+              <h1 className="text-lg font-bold text-foreground leading-tight">Hello, {name} 👋</h1>
+            </div>
           </div>
           <button className="relative h-11 w-11 rounded-full bg-secondary flex items-center justify-center text-primary">
             <Bell className="h-5 w-5" />
-            <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-accent" />
+            <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-brand-yellow" />
           </button>
         </div>
 
@@ -65,7 +73,7 @@ export const HomeScreen = ({ name }: { name: string }) => {
               <img src={b.img} alt={b.title} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
               <div className="absolute inset-0 bg-gradient-to-t from-foreground/85 via-foreground/30 to-transparent" />
               <div className="absolute inset-0 p-5 flex flex-col justify-end text-primary-foreground">
-                <span className="inline-flex w-fit items-center gap-1 bg-accent text-accent-foreground text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full mb-2">
+                <span className="inline-flex w-fit items-center gap-1 bg-brand-yellow text-foreground text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full mb-2">
                   <Sparkles className="h-3 w-3" /> {b.tag}
                 </span>
                 <h2 className="text-xl font-bold leading-tight">{b.title}</h2>
@@ -119,7 +127,7 @@ export const HomeScreen = ({ name }: { name: string }) => {
             <h3 className="text-base font-bold">Recommended for you</h3>
             <p className="text-xs text-muted-foreground">Picked from your favourite brands</p>
           </div>
-          <Tag className="h-4 w-4 text-accent" />
+          <Tag className="h-4 w-4 text-primary" />
         </div>
 
         <div className="space-y-3">
@@ -131,7 +139,7 @@ export const HomeScreen = ({ name }: { name: string }) => {
               <div className="flex-1 min-w-0">
                 <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{d.brand}</p>
                 <p className="text-sm font-semibold text-foreground truncate">{d.title}</p>
-                <p className="text-[11px] text-accent font-semibold mt-0.5">⏱ {d.expires}</p>
+                <p className="text-[11px] text-primary font-semibold mt-0.5">⏱ {d.expires}</p>
               </div>
               <button className="bg-primary text-primary-foreground text-xs font-bold px-3.5 py-2 rounded-xl shrink-0">
                 Use
@@ -143,10 +151,12 @@ export const HomeScreen = ({ name }: { name: string }) => {
 
       {/* Mall map */}
       <section className="px-5">
-        <button className="relative w-full rounded-3xl overflow-hidden h-32 shadow-card group">
-          <div className="absolute inset-0 gradient-primary" />
-          {/* Decorative grid */}
-          <svg className="absolute inset-0 w-full h-full opacity-20" xmlns="http://www.w3.org/2000/svg">
+        <button
+          onClick={() => setMapOpen(true)}
+          className="relative w-full rounded-3xl overflow-hidden h-32 shadow-card group"
+        >
+          <div className="absolute inset-0 gradient-rainbow" />
+          <svg className="absolute inset-0 w-full h-full opacity-25" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
                 <path d="M 20 0 L 0 0 0 20" fill="none" stroke="white" strokeWidth="0.5" />
@@ -154,13 +164,13 @@ export const HomeScreen = ({ name }: { name: string }) => {
             </defs>
             <rect width="100%" height="100%" fill="url(#grid)" />
           </svg>
-          <div className="absolute top-4 right-4 h-10 w-10 rounded-full bg-accent flex items-center justify-center animate-pulse-glow">
-            <MapPin className="h-5 w-5 text-accent-foreground" />
+          <div className="absolute top-4 right-4 h-10 w-10 rounded-full bg-card flex items-center justify-center animate-pulse-glow">
+            <MapPin className="h-5 w-5 text-primary" />
           </div>
           <div className="absolute bottom-0 left-0 p-5 text-left text-primary-foreground">
-            <p className="text-xs font-semibold opacity-90">Interactive map</p>
+            <p className="text-xs font-semibold opacity-95">Interactive map</p>
             <h4 className="text-lg font-bold">Find any of 170+ stores</h4>
-            <p className="text-xs opacity-80 mt-0.5">Floor 1 · 2 · 3 · Parking</p>
+            <p className="text-xs opacity-90 mt-0.5">Floor 1 · 2 · 3 · Tap to explore</p>
           </div>
         </button>
       </section>
