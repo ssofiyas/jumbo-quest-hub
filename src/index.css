@@ -3,35 +3,44 @@
 @tailwind utilities;
 
 /* Jumbo Shopping Centre Loyalty App — Design System
-   All colors HSL. Brand: Jumbo green + warm orange accent.
+   All colors HSL. Brand: Jumbo coral red + green/yellow/blue accents.
 */
 
 @layer base {
   :root {
     --background: 40 33% 98%;
-    --foreground: 158 30% 12%;
+    --foreground: 220 35% 14%;
 
     --card: 0 0% 100%;
-    --card-foreground: 158 30% 12%;
+    --card-foreground: 220 35% 14%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 158 30% 12%;
+    --popover-foreground: 220 35% 14%;
 
-    /* Jumbo green */
-    --primary: 152 68% 28%;
-    --primary-foreground: 40 33% 98%;
-    --primary-glow: 152 60% 42%;
+    /* Jumbo coral red — brand */
+    --primary: 354 78% 60%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 354 90% 70%;
+    --primary-soft: 354 90% 96%;
 
-    /* Warm orange accent */
-    --accent: 22 92% 55%;
-    --accent-foreground: 0 0% 100%;
-    --accent-soft: 30 100% 94%;
+    /* Brand accents */
+    --brand-green: 152 60% 42%;
+    --brand-green-soft: 152 50% 92%;
+    --brand-yellow: 44 96% 56%;
+    --brand-yellow-soft: 44 100% 94%;
+    --brand-blue: 210 90% 54%;
+    --brand-blue-soft: 210 90% 95%;
 
-    --secondary: 152 30% 94%;
-    --secondary-foreground: 152 68% 22%;
+    /* Accent = warm yellow (used by .gradient-accent etc.) */
+    --accent: 44 96% 56%;
+    --accent-foreground: 220 35% 14%;
+    --accent-soft: 44 100% 94%;
 
-    --muted: 150 15% 95%;
-    --muted-foreground: 158 12% 42%;
+    --secondary: 354 60% 96%;
+    --secondary-foreground: 354 60% 30%;
+
+    --muted: 220 15% 96%;
+    --muted-foreground: 220 10% 45%;
 
     --gold: 42 88% 55%;
     --silver: 220 8% 70%;
@@ -39,24 +48,25 @@
     --destructive: 0 78% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 150 18% 90%;
-    --input: 150 18% 90%;
-    --ring: 152 68% 28%;
+    --border: 220 15% 91%;
+    --input: 220 15% 91%;
+    --ring: 354 78% 60%;
 
     --radius: 1rem;
 
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(152 68% 28%), hsl(152 60% 42%));
-    --gradient-accent: linear-gradient(135deg, hsl(22 92% 55%), hsl(38 95% 60%));
-    --gradient-hero: linear-gradient(140deg, hsl(152 68% 28%) 0%, hsl(152 55% 38%) 60%, hsl(38 90% 58%) 130%);
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(150 30% 97%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(354 78% 60%), hsl(354 90% 70%));
+    --gradient-accent: linear-gradient(135deg, hsl(44 96% 56%), hsl(34 100% 60%));
+    --gradient-hero: linear-gradient(140deg, hsl(354 78% 60%) 0%, hsl(14 90% 62%) 55%, hsl(44 96% 60%) 130%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(354 50% 99%) 100%);
     --gradient-gold: linear-gradient(135deg, hsl(42 88% 55%), hsl(38 95% 65%));
+    --gradient-rainbow: linear-gradient(135deg, hsl(354 78% 60%) 0%, hsl(44 96% 56%) 35%, hsl(152 60% 45%) 70%, hsl(210 90% 54%) 100%);
 
     /* Shadows */
-    --shadow-soft: 0 2px 12px -2px hsl(152 40% 20% / 0.08);
-    --shadow-card: 0 8px 28px -10px hsl(152 50% 20% / 0.18);
-    --shadow-glow: 0 12px 40px -12px hsl(22 92% 55% / 0.45);
-    --shadow-primary: 0 12px 40px -12px hsl(152 68% 28% / 0.45);
+    --shadow-soft: 0 2px 12px -2px hsl(354 40% 30% / 0.08);
+    --shadow-card: 0 8px 28px -10px hsl(354 50% 30% / 0.18);
+    --shadow-glow: 0 12px 40px -12px hsl(44 96% 56% / 0.55);
+    --shadow-primary: 0 12px 40px -12px hsl(354 78% 60% / 0.45);
 
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -71,38 +81,46 @@
   }
 
   .dark {
-    --background: 158 30% 8%;
+    --background: 220 35% 9%;
     --foreground: 40 30% 96%;
 
-    --card: 158 28% 12%;
+    --card: 220 30% 13%;
     --card-foreground: 40 30% 96%;
 
-    --popover: 158 28% 12%;
+    --popover: 220 30% 13%;
     --popover-foreground: 40 30% 96%;
 
-    --primary: 152 60% 45%;
-    --primary-foreground: 158 40% 8%;
-    --primary-glow: 152 70% 55%;
+    --primary: 354 80% 62%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 354 90% 72%;
+    --primary-soft: 354 40% 22%;
 
-    --accent: 22 92% 58%;
-    --accent-foreground: 0 0% 100%;
-    --accent-soft: 22 40% 20%;
+    --brand-green: 152 55% 50%;
+    --brand-green-soft: 152 30% 22%;
+    --brand-yellow: 44 96% 60%;
+    --brand-yellow-soft: 44 40% 22%;
+    --brand-blue: 210 90% 60%;
+    --brand-blue-soft: 210 40% 22%;
 
-    --secondary: 158 25% 18%;
+    --accent: 44 96% 58%;
+    --accent-foreground: 220 35% 14%;
+    --accent-soft: 44 40% 22%;
+
+    --secondary: 220 25% 18%;
     --secondary-foreground: 40 30% 96%;
 
-    --muted: 158 22% 16%;
-    --muted-foreground: 150 10% 65%;
+    --muted: 220 22% 16%;
+    --muted-foreground: 220 10% 65%;
 
     --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 158 22% 20%;
-    --input: 158 22% 20%;
-    --ring: 152 60% 45%;
+    --border: 220 22% 20%;
+    --input: 220 22% 20%;
+    --ring: 354 80% 62%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(152 60% 30%), hsl(152 65% 45%));
-    --gradient-card: linear-gradient(145deg, hsl(158 28% 14%), hsl(158 25% 11%));
+    --gradient-primary: linear-gradient(135deg, hsl(354 70% 50%), hsl(354 85% 65%));
+    --gradient-card: linear-gradient(145deg, hsl(220 30% 15%), hsl(220 25% 11%));
 
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
@@ -138,6 +156,7 @@
   .gradient-hero { background: var(--gradient-hero); }
   .gradient-card { background: var(--gradient-card); }
   .gradient-gold { background: var(--gradient-gold); }
+  .gradient-rainbow { background: var(--gradient-rainbow); }
   .shadow-soft { box-shadow: var(--shadow-soft); }
   .shadow-card { box-shadow: var(--shadow-card); }
   .shadow-glow { box-shadow: var(--shadow-glow); }
@@ -153,8 +172,8 @@
   50% { transform: translateY(-6px); }
 }
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 hsl(var(--accent) / 0.5); }
-  50% { box-shadow: 0 0 0 12px hsl(var(--accent) / 0); }
+  0%, 100% { box-shadow: 0 0 0 0 hsl(var(--primary) / 0.5); }
+  50% { box-shadow: 0 0 0 12px hsl(var(--primary) / 0); }
 }
 @keyframes spin-slow {
   to { transform: rotate(360deg); }
@@ -163,7 +182,12 @@
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
+@keyframes ping-pin {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
 .animate-float { animation: float 3s ease-in-out infinite; }
 .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
 .animate-spin-slow { animation: spin-slow 8s linear infinite; }
 .animate-slide-up { animation: slide-up 0.4s ease-out; }
+.animate-ping-pin { animation: ping-pin 1.6s cubic-bezier(0,0,0.2,1) infinite; }
