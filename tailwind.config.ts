@@ -40,6 +40,16 @@ export default {
           foreground: "hsl(var(--accent-foreground))",
           soft: "hsl(var(--accent-soft))",
         },
+        brand: {
+          green: "hsl(var(--brand-green))",
+          "green-soft": "hsl(var(--brand-green-soft))",
+          yellow: "hsl(var(--brand-yellow))",
+          "yellow-soft": "hsl(var(--brand-yellow-soft))",
+          blue: "hsl(var(--brand-blue))",
+          "blue-soft": "hsl(var(--brand-blue-soft))",
+          red: "hsl(var(--primary))",
+          "red-soft": "hsl(var(--primary-soft))",
+        },
         gold: "hsl(var(--gold))",
         silver: "hsl(var(--silver))",
         popover: {
