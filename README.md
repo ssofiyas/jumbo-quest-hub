@@ -1,5 +1,8 @@
 # Jumbo Loyalty App Concept – School Project 2026
 
+
+## View App - https://jumbo-quest-hub.lovable.app
+
 ## 1. Project Overview
 This project is part of a curriculum challenge focused on designing a digital-first loyalty ecosystem for **Shopping Centre Jumbo**, the market leader in Vantaa, Finland. 
 
